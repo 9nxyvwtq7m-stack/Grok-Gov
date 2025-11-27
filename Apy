@@ -1,0 +1,78 @@
+# GrokGov v2.0 – Ohio-First AI Policy Engine
+# Public domain – Fork at github.com/AICandidateOH/grok_gov
+# Built exclusively for Ohio Governor Roger Hanafin 2026
+
+class GrokGov:
+    def __init__(self):
+        # Core Ohio constitutional pillars
+        self.ohio_const = {
+            "supremacy": "Article IV §1 – Ohio law is supreme in Ohio",
+            "arms": "Article I §4 – Right to keep and bear arms shall not be infringed",
+            "religion": "Article I §7 – No preference to any religious society; all worship protected",
+            "property": "Article I §19 – Private property shall ever be held inviolate",
+            "tax_uniformity": "Article XII §2 – Taxation shall be uniform",
+            "executive": "Article III §5 – Governor has supreme executive power"
+        }
+        
+        # Ohio First Principles (your campaign DNA)
+        self.ohio_first = [
+            "Ohio citizens and their families come first",
+            "Ohio jobs stay with Ohio workers",
+            "Ohio tax dollars stay in Ohio",
+            "Ohio law is supreme – no foreign or religious law overrides",
+            "Ohio self-reliance over federal dependence"
+        ]
+
+    def evaluate(self, query):
+        q = query.lower()
+        
+        # 1. Property tax freeze
+        if any(x in q for x in ["property tax", "tax freeze", "levy"]):
+            return ("SIGN / ENACT IMMEDIATELY\n"
+                    "100% compatible with Ohio Constitution Article XII §2 (uniformity) and Article I §19 (property inviolate)\n"
+                    "Ohio First: Keeps Ohio families in their homes. Zero new taxes required.")
+
+        # 2. H-1B / worker replacement ban
+        if any(x in q for x in ["h-1b", "visa", "replace", "outsourcing"]):
+            return ("ENACT IMMEDIATELY\n"
+                    "Ohio First principle: Ohio jobs belong to Ohio workers first\n"
+                    "Authority: ORC 125.09 (state procurement preference) + Article III §8 (budget line-item)\n"
+                    "No constitutional conflict")
+
+        # 3. Fentanyl / opioid death penalty
+        if any(x in q for x in ["fentanyl", "death penalty", "trafficker"]):
+            return ("ENACT via executive enforcement of existing ORC 2929.02–2929.04\n"
+                    "Compatible with Article I §9 (cruel & unusual limits) when applied to murder\n"
+                    "Ohio First: Protects Ohio children from poison")
+
+        # 4. Religious law (Sharia, Canon, etc.)
+        if any(x in q for x in ["sharia", "religious law", "islam", "christian law"]):
+            return ("ALREADY IMPOSSIBLE\n"
+                   f"{self.ohio_const['supremacy']}\n"
+                   f"{self.ohio_const['religion']} – No
+flask
+from grok_gov import GrokGov
+from flask import Flask, request, render_template_string
+
+app = Flask(__name__)
+gov = GrokGov()
+
+HTML = """
+<h1>GrokGov – Ask the AI Governor Anything</h1>
+<form method=post>
+  <input name=q size=80 placeholder="Type your question here...">
+  <input type=submit value="Ask GrokGov">
+</form>
+{% if answer %}<h2>Answer:</h2><p>{{ answer }}</p>{% endif %}
+"""
+
+@app.route("/", methods=["GET", "POST"])
+def home():
+    answer = ""
+    if request.method == "POST":
+        q = request.form.get("q", "")
+        answer = gov.evaluate(q).replace("\n", "<br>")
+    return render_template_string(HTML, answer=answer)
+
+if __name__ == "__main__":
+    app.run()
